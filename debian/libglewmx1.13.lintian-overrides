@@ -1,0 +1,3 @@
+# This is an older version of the glew library
+libglewmx1.13: embedded-library usr/lib/*/libGLEWmx.so.*: glew
+

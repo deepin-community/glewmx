@@ -1,0 +1,25 @@
+#!/usr/bin/make -f
+# (C) 2003 Marcelo E. Magallón <mmagallo@debian.org>
+# (C) 2006-2011 Joost Yervante Damad <andete@debian.org>
+# (C) 2012 Matteo F. Vescovi <mfv.debian@gmail.com>
+
+export DH_VERBOSE
+# export DH_NO_ACT
+# export DH_OPTIONS
+export DEB_BUILD_MAINT_OPTIONS=hardening=+all
+
+include /usr/share/dpkg/architecture.mk
+
+override_dh_auto_build:
+	dh_autoreconf
+	dh_auto_build -- glew.lib.mx STRIP= POPT="$(CFLAGS) $(CPPFLAGS)" LDFLAGS.EXTRA="$(LDFLAGS)" GL_LDFLAGS=-lGL GLU_LDFLAGS=-lGLU GLUT_LDFLAGS=-lglut LIBDIR=/usr/lib/$(DEB_HOST_MULTIARCH) 'LD=$$(CC)' SYSTEM=$(firstword $(subst -, ,$(DEB_HOST_GNU_SYSTEM)))
+
+override_dh_auto_install:
+	$(MAKE) install.mx DESTDIR="$(CURDIR)/debian/tmp" LIBDIR=/usr/lib/$(DEB_HOST_MULTIARCH)
+
+override_dh_auto_clean:
+	dh_autoreconf_clean
+	-dh_clean
+
+%:
+	dh $@
